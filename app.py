@@ -1,45 +1,46 @@
 from flask import Flask, request, jsonify
-from sprawdzian import item_service
+from sprawdzian import UserService
 
 app = Flask(__name__)
+user_service = UserService()
 
-@app.route('/items', methods=['GET'])
-def get_all_items():
-    return jsonify(item_service.get_all_items())
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    return jsonify(user_service.get_all_users())
 
-@app.route('/items/<int:item_id>', methods=['GET'])
-def get_item_by_id(item_id):
-    item = item_service.get_item_by_id(item_id)
-    if item:
-        return jsonify(item)
+@app.route('/users/<int:user_id>', methods=['GET'])
+def get_user_by_id(user_id):
+    user = user_service.get_user_by_id(user_id)
+    if user:
+        return jsonify(user)
     else:
-        return jsonify({'error': 'Item not found'}), 404
+        return jsonify({'error': 'User not found'}), 404
 
-@app.route('/items', methods=['POST'])
-def create_item():
+@app.route('/users', methods=['POST'])
+def create_user():
     data = request.get_json()
-    if not data or not all(key in data for key in ['name', 'age', 'group']):
+    if not data or not all(key in data for key in ['firstName', 'lastName', 'birthYear', 'group']):
         return jsonify({'error': 'Invalid data'}), 400
 
-    item = item_service.create_item(data)
-    return jsonify(item), 201
+    user = user_service.create_user(data)
+    return jsonify(user), 201
 
-@app.route('/items/<int:item_id>', methods=['PATCH'])
-def update_item(item_id):
+@app.route('/users/<int:user_id>', methods=['PATCH'])
+def update_user(user_id):
     data = request.get_json()
-    item = item_service.update_item(item_id, data)
-    if item:
-        return jsonify(item)
+    user = user_service.update_user(user_id, data)
+    if user:
+        return jsonify(user)
     else:
-        return jsonify({'error': 'Item not found'}), 404
+        return jsonify({'error': 'User not found'}), 404
 
-@app.route('/items/<int:item_id>', methods=['DELETE'])
-def delete_item(item_id):
-    item = item_service.delete_item(item_id)
-    if item:
-        return jsonify(item)
+@app.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    user = user_service.delete_user(user_id)
+    if user:
+        return jsonify(user)
     else:
-        return jsonify({'error': 'Item not found'}), 404
+        return jsonify({'error': 'User not found'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
