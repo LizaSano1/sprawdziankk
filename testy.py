@@ -16,15 +16,15 @@ class TestUserService(unittest.TestCase):
         self.assertEqual(user['firstName'], 'John')
 
     def test_get_all_users(self):
-        response: TestResponse = self.app.get('/users')
+        response: Response = self.app.get('/users')
         users = response.get_json()
         self.assertEqual(response.status_code, 200)
         self.assertIsInstance(users, list)
 
     def test_get_user_by_id(self):
         data = {'firstName': 'John', 'lastName': 'Doe', 'birthYear': 1990, 'group': 'user'}
-        user = user_service.create_user(data)
-        response: TestResponse = self.app.get(f'/users/{user["id"]}')
+        user = self.user_service.create_user(data)  # Poprawione wywołanie metody
+        response: Response = self.app.get(f'/users/{user["id"]}')
         user_result = response.get_json()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(user_result['id'], user['id'])
