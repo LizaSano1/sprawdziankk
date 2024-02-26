@@ -1,13 +1,15 @@
 import unittest
-from app import app
+from flask.wrappers import Response
+from app import app, user_service 
 
 class TestUserService(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
+        self.user_service = user_service.UserService()
 
     def test_create_user(self):
         data = {'firstName': 'John', 'lastName': 'Doe', 'birthYear': 1990, 'group': 'user'}
-        response: TestResponse = self.app.post('/users', json=data)
+        response: Response = self.app.post('/users', json=data)
         user = response.get_json()
         self.assertEqual(response.status_code, 201)
         self.assertEqual(user['id'], 1)
